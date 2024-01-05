@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import '../schedule/schedule.dart';
+import 'package:dropdown_button2/custom_dropdown_button2.dart';
 final player=AudioPlayer()..setReleaseMode(ReleaseMode.loop);
 
 void main() {
@@ -16,34 +17,46 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
 class PomodoroTimer extends StatefulWidget {
   @override
   _PomodoroTimerState createState() => _PomodoroTimerState();
 }
- /*play()async{
-  AudioPlayer player = AudioPlayer();
-  player.setSourceAsset('test.mp3');
-  //player.play();
-}*/
-class _PomodoroTimerState extends State<PomodoroTimer> {
 
-  int workTime = 25;
+class _PomodoroTimerState extends State<PomodoroTimer> {
+  void SetTime(worktime){
+    this.workTime=worktime;
+    setState(() {
+
+    });
+    resetTimer();
+  }
+  int GetTime(){
+    return this.workTime;
+  }
+
+  int workTime=25;
   int breakTime = 5;
-  int currentTime = 25 * 60; // Initial time in seconds
+  int currentTime=25*60; // Initial time in seconds
   bool isWorking = true;
-  bool isRunning = false;
+  bool isRunning = true;
   bool istesting = true;
   late Timer timer;
 
   int counter = 0;
 
-  void startTimer() {
+  void startTimer(){
+
+    if(isRunning){
+      setState(() {
+        isRunning = false;
+      });
     if (istesting) {
-      player.play(AssetSource("1.mp3"));
+
       istesting=false;
+
       timer = Timer.periodic(Duration(seconds: 1), (timer) {
         setState(() {
+          player.play(AssetSource("1.mp3"));
           if (currentTime > 0) {
             currentTime--;
           } else {
@@ -52,29 +65,33 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
               player.play(AssetSource("timeout.mp3"));
               currentTime = breakTime * 60;
             } else {
-              currentTime = workTime * 60;
+              currentTime = GetTime() * 60;
             }
             isWorking = !isWorking;
           }
         });
       });
     }
-  }
-
-  void pauseTimer() {
-    if (!istesting) {
+  }else{
+      setState(() {
+        isRunning = true;
+      });
       player.stop();
       istesting=true;
       timer.cancel();
     }
   }
+
+
   void resetTimer() {
     istesting=true;
     timer.cancel();
+    player.stop();
     setState(() {
       currentTime = workTime * 60;
       isWorking = true;
       isRunning = false;
+      startTimer();
     });
   }
 
@@ -107,12 +124,12 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
 
             Text(
               isWorking ? 'Work Time' : 'Break Time',
-              style: TextStyle(fontSize: 20,backgroundColor:Color.fromARGB(255, 255, 255, 255)),
+              style: TextStyle(fontSize: 35,color: Colors.white),
             ),
             SizedBox(height: 20),
             Text(
               formatTime(currentTime),
-              style: TextStyle(fontSize: 40,backgroundColor:Color.fromARGB(255, 255, 255, 255)),
+              style: TextStyle(fontSize: 95,color:Colors.white),
             ),
             SizedBox(height: 20),
             Row(
@@ -120,35 +137,49 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
               children: [
                   ElevatedButton(
                     onPressed: () {
-                      setState(() {
-                        isRunning = true;
-                      });
                       startTimer();
                     },
-                    child: Text('Start'),
+                      child:Icon(
+                        isRunning ? Icons.play_circle_outline_outlined : Icons.stop_circle_rounded ,
+                        size: 55,)
+
                   ),
                   SizedBox(width: 20),
                 ElevatedButton(
                   onPressed: () {
-                    setState(() {
-                      isRunning = false;
-                    });
-                    pauseTimer();
-                  },
-                  child: Text('Pause'),
-                ),
-                SizedBox(width: 20),
-                ElevatedButton(
-                  onPressed: () {
                     resetTimer();
                   },
-                  child: Text('Reset'),
+                  child: Icon(
+                      Icons.refresh,
+                    size: 55,
+                  ),
                 ),
+
               ],
             ),
+            Column(
+                children:[
+
+                  DropdownButton(icon: Icon(Icons.playlist_play_sharp), iconSize: 40, iconEnabledColor: Colors.white,
+                    hint: Text('學習時長',style:TextStyle(fontSize:25,color: Colors.white)),
+
+                    items: [
+                      DropdownMenuItem(child: Text('15'), value: 15), DropdownMenuItem(child: Text('20'), value: 20),
+                      DropdownMenuItem(child: Text('25'), value: 25)
+                    ], onChanged: (value) {
+                    setState(() {
+                      startTimer();
+                    });
+                      return SetTime(value);
+                    },
+                  ),
+                ],
+              ),
           ],
         ),
+
       ),
+
     );
   }
 }
