@@ -207,13 +207,14 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
               children:
               [
                 DropdownButton(icon: Icon(Icons.playlist_play_sharp), iconSize: 40, iconEnabledColor: Colors.white,
-                  hint: Text('學習時長',style:TextStyle(fontSize:25,color: Colors.white)),
+                  hint: Text('學習時長:'+GetTime().toString(),style:TextStyle(fontSize:25,color: Colors.white)),
 
                   items: [
                     DropdownMenuItem(child: Text('15'), value: 15), DropdownMenuItem(child: Text('20'), value: 20),
                     DropdownMenuItem(child: Text('25'), value: 25)
                   ], onChanged: (value) {
                     setState(() {
+                      Text('學習時長:'+GetTime().toString(),style:TextStyle(fontSize:25,color: Colors.white));
                       istesting=false;
                       startTimer();
                     });
@@ -228,9 +229,9 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                     DropdownMenuItem(child: Text('2'), value: 2), DropdownMenuItem(child: Text('3'), value: 3),
                     DropdownMenuItem(child: Text('4'), value: 4)
                   ], onChanged: (value) {
-                  setState(() {
-                    Text('番茄鐘數量:'+GetCounter().toString(),style:TextStyle(fontSize:25,color: Colors.white));
-                  });
+                    setState(() {
+                      Text('番茄鐘數量:'+GetCounter().toString(),style:TextStyle(fontSize:25,color: Colors.white));
+                    });
                     return SetCounter(value);
                   },
                 ),
