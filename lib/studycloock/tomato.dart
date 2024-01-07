@@ -64,12 +64,14 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
   
               currentTime = breakTime * 60;
             } else {
-
               counter++;
               if(counter_set==counter){
+                isWorking = !isWorking;
+                counter=0;
                 currentTime = 15* 60;
+              }else{
+                currentTime = GetTime() * 60;
               }
-              currentTime = GetTime() * 60;
             }
             isWorking = !isWorking;
           }
