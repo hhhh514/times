@@ -58,14 +58,17 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
             currentTime--;
           } else {
             player.stop();
-
+            this.showAlertDialog(context);
             timer.cancel();
             if (isWorking) {
-              this.showAlertDialog(context);
+  
               currentTime = breakTime * 60;
             } else {
-              this.showAlertDialog(context);
+
               counter++;
+              if(counter_set==counter){
+                currentTime = 15* 60;
+              }
               currentTime = GetTime() * 60;
             }
             isWorking = !isWorking;
