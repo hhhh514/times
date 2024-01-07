@@ -109,6 +109,9 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
   void showAlertDialog(BuildContext context) {
 
     isRunning=false;
+    if(counter_set==counter){
+      isWorking=false;
+    }
     player.play(AssetSource("timeout.mp3"));
     AlertDialog dialog = AlertDialog(
       title: Text(
